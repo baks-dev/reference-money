@@ -21,6 +21,7 @@
  *  THE SOFTWARE.
  */
 
+
 namespace BaksDev\Reference\Money\Type;
 
 final class Money
