@@ -1,17 +1,17 @@
 <?php
 /*
  *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,35 +21,34 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Reference\Money\Type;
+declare(strict_types=1);
 
-use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\BigIntType;
+namespace BaksDev\Reference\Money;
 
-final class MoneyType extends BigIntType
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+class BaksDevReferenceMoneyBundle extends AbstractBundle
 {
 	
-	public function convertToDatabaseValue($value, AbstractPlatform $platform) : mixed
+	public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder) : void
 	{
-		return $value instanceof Money ? $value->getValue() * 100 : $value * 100;
-	}
-	
-	
-	public function convertToPHPValue($value, AbstractPlatform $platform) : mixed
-	{
-		return !empty($value) ? new Money($value / 100) : null; //new Money(0);
-	}
-	
-	
-	public function getName() : string
-	{
-		return Money::TYPE;
-	}
-	
-	
-	public function requiresSQLCommentHint(AbstractPlatform $platform) : bool
-	{
-		return true;
+		
+		$path = __DIR__.'/Resources/config/';
+		
+		foreach(new \DirectoryIterator($path) as $config)
+		{
+			if($config->isDot() || $config->isDir())
+			{
+				continue;
+			}
+			
+			if($config->isFile() && $config->getFilename() !== 'routes.php')
+			{
+				$container->import($config->getPathname());
+			}
+		}
 	}
 	
 }

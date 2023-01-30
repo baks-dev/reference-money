@@ -29,15 +29,17 @@ use Twig\TwigFunction;
 
 final class MoneyExtension extends AbstractExtension
 {
-	public function getFunctions(): array
+	public function getFunctions() : array
 	{
 		return [
 			new TwigFunction('money', [$this, 'money'], ['needs_environment' => true]),
 		];
 	}
 	
-	public function money(Environment $twig, string $money): string
-    {
-        return ($money * 1 / 100);
+	
+	public function money(Environment $twig, string $money) : string
+	{
+		return ($money * 1 / 100);
 	}
+	
 }
