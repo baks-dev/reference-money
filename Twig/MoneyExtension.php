@@ -23,23 +23,50 @@
 
 namespace BaksDev\Reference\Money\Twig;
 
+use NumberFormatter;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 final class MoneyExtension extends AbstractExtension
 {
+	
+	private TranslatorInterface $translator;
+	
+	
+	public function __construct(TranslatorInterface $translator) {
+		$this->translator = $translator;
+	}
+	
+	
 	public function getFunctions() : array
 	{
 		return [
-			new TwigFunction('money', [$this, 'money'], ['needs_environment' => true]),
+			new TwigFunction('money', [$this, 'call']),
 		];
 	}
 	
 	
-	public function money(Environment $twig, string $money) : string
+	public function call(?float $money, ?string $from = 'RUR', string $to = null)
 	{
-		return ($money * 1 / 100);
+		
+		if(empty($money)) { return null; }
+		
+		$money = ($money * 1 / 100);
+		
+		if(empty($money)) {  return null; }
+		
+		if(empty($to)) {  $to = $from; }
+		
+		if($from !== $to)
+		{
+			/** TODO:Конвертируем валюту */
+		}
+		
+		$fmt = new NumberFormatter($this->translator->getLocale(), NumberFormatter::CURRENCY);
+		$fmt->setAttribute(NumberFormatter::FRACTION_DIGITS, 0);
+		return $fmt->formatCurrency($money, $to);
 	}
 	
 }
