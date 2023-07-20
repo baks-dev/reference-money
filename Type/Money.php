@@ -37,13 +37,37 @@ final class Money
 			$value = $value->getValue();
 		}
 		
-		$this->value = $value ? max(0, $value) : null;
+		$this->value = $value ? max(0, $value) : 0;
 	}
 	
 	
 	public function getValue() : int|float|null
 	{
-		return $this->value;
+		return round($this->value, 2);
 	}
-	
+
+    public function add(int|float|self $money): self
+    {
+        if($money instanceof self)
+        {
+            $this->value += $money->getValue();
+            return $this;
+        }
+
+        $this->value += $money;
+        return $this;
+    }
+
+    public function sub(int|float|self $money): self
+    {
+        if($money instanceof self)
+        {
+           $this->value -= $money->getValue();
+           return $this;
+        }
+
+        $this->value -= $money;
+        return $this;
+    }
+
 }

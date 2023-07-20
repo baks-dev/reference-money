@@ -30,11 +30,7 @@
       "BaksDev\\Reference\\Money\\": ""
     }
   },
-  "autoload-dev": {
-    "psr-4": {
-      "BaksDev\\Reference\\Money\\Tests\\": "Tests/"
-    }
-  },
+
   "config": {
     "sort-packages": true,
     "allow-plugins": {
