@@ -25,7 +25,6 @@ namespace BaksDev\Reference\Money\Twig;
 
 use NumberFormatter;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -65,7 +64,7 @@ final class MoneyExtension extends AbstractExtension
 		}
 		
 		$fmt = new NumberFormatter($this->translator->getLocale(), NumberFormatter::CURRENCY);
-		$fmt->setAttribute(NumberFormatter::FRACTION_DIGITS, 0);
+		$fmt->setAttribute(NumberFormatter::FRACTION_DIGITS, 2);
 		return $fmt->formatCurrency($money, $to);
 	}
 	

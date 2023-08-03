@@ -23,6 +23,8 @@
 
 namespace BaksDev\Reference\Money\Type;
 
+use InvalidArgumentException;
+
 final class Money
 {
 	public const TYPE = 'money_type';
@@ -37,36 +39,47 @@ final class Money
 			$value = $value->getValue();
 		}
 		
-		$this->value = $value ? max(0, $value) : 0;
+		$this->value = $value;
 	}
-	
-	
+
 	public function getValue() : int|float|null
 	{
 		return round($this->value, 2);
 	}
 
-    public function add(int|float|self $money): self
+    /**
+     * Приводит отрицательное число к 0, либо положительный результат
+     */
+    public function getOnlyPositive() : int|float|null
     {
-        if($money instanceof self)
+        return round(max(0, $this->value), 2);
+    }
+
+    public function add(self $money): self
+    {
+        if($money->getValue() < 0)
         {
-            $this->value += $money->getValue();
-            return $this;
+            throw new InvalidArgumentException('Для суммы значение должно быть строго положительным');
         }
 
-        $this->value += $money;
+        $current = $this->getValue() * 100;
+        $add = $money->getValue() * 100;
+        $this->value = ($current + $add) / 100;
+
         return $this;
     }
 
-    public function sub(int|float|self $money): self
+    public function sub(self $money): self
     {
-        if($money instanceof self)
+        if($money->getValue() < 0)
         {
-           $this->value -= $money->getValue();
-           return $this;
+            throw new InvalidArgumentException('Для разности значение должно быть строго положительным');
         }
 
-        $this->value -= $money;
+        $current = $this->getValue() * 100;
+        $sub = $money->getValue() * 100;
+        $this->value = ($current - $sub) / 100;
+
         return $this;
     }
 
