@@ -1,7 +1,7 @@
 {
   "namespaces": [
     {
-      "namespace": "Money",
+      "namespace": "reference-money",
       "path": "Resources/view"
     }
   ]
