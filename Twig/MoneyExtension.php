@@ -65,7 +65,7 @@ final class MoneyExtension extends AbstractExtension
 		
 		$fmt = new NumberFormatter($this->translator->getLocale(), NumberFormatter::CURRENCY);
 		$fmt->setAttribute(NumberFormatter::FRACTION_DIGITS, 2);
-		return $fmt->formatCurrency($money, $to);
+		return str_replace([',00', '.00'], '', $fmt->formatCurrency($money, $to));
 	}
 	
 }
