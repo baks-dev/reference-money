@@ -18,4 +18,3 @@ $ composer require baks-dev/reference-money
 
 The MIT License (MIT). Обратитесь к [Файлу лицензии](LICENSE.md) за дополнительной информацией.
 
-
