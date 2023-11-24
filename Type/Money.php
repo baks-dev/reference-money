@@ -28,11 +28,13 @@ use InvalidArgumentException;
 final class Money
 {
 	public const TYPE = 'money_type';
-	
+
+	public const TEST = 1.25;
+
 	private int|float|null $value;
 	
 	
-	public function __construct(int|float|null|self $value)
+	public function __construct(Money|int|float|null $value)
 	{
 		if($value instanceof self)
 		{
