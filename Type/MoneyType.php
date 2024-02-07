@@ -24,9 +24,9 @@
 namespace BaksDev\Reference\Money\Type;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\BigIntType;
+use Doctrine\DBAL\Types\Type;
 
-final class MoneyType extends BigIntType
+final class MoneyType extends Type
 {
 	
 	public function convertToDatabaseValue($value, AbstractPlatform $platform): mixed
@@ -35,7 +35,7 @@ final class MoneyType extends BigIntType
 	}
 	
 	
-	public function convertToPHPValue($value, AbstractPlatform $platform): mixed
+	public function convertToPHPValue($value, AbstractPlatform $platform): ?Money
 	{
 		return !empty($value) ? new Money($value / 100) : null; //new Money(0);
 	}
@@ -45,11 +45,14 @@ final class MoneyType extends BigIntType
 	{
 		return Money::TYPE;
 	}
-	
-	
+
 	public function requiresSQLCommentHint(AbstractPlatform $platform) : bool
 	{
 		return true;
 	}
-	
+
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
+    {
+        return $platform->getBigIntTypeDeclarationSQL($column);
+    }
 }
