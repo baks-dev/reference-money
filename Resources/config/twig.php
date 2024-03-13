@@ -25,6 +25,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use BaksDev\Reference\Money\Twig\MoneyCurrencyExtension;
 use BaksDev\Reference\Money\Twig\MoneyExtension;
+use BaksDev\Reference\Money\Twig\MoneyToWordExtension;
 
 return static function(ContainerConfigurator $configurator) {
 	$services = $configurator->services()
@@ -42,7 +43,11 @@ return static function(ContainerConfigurator $configurator) {
 		->class(MoneyCurrencyExtension::class)
 		->tag('twig.extension')
 	;
-	
+
+    $services->set('money.to.word.type.twig.extension')
+        ->class(MoneyToWordExtension::class)
+        ->tag('twig.extension')
+    ;
 };
 
 
