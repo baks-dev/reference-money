@@ -85,7 +85,11 @@ final class Money
         return $this;
     }
 
-
+    public function equals(mixed $money)
+    {
+        $money = new self($money);
+        return $this->getValue() === $money->getValue();
+    }
 
 
 }
