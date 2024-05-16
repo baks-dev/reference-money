@@ -27,32 +27,37 @@ use InvalidArgumentException;
 
 final class Money
 {
-	public const TYPE = 'money_type';
+    public const TYPE = 'money_type';
 
-	public const TEST = 1.25;
+    public const TEST = 1.25;
 
-	private int|float|null $value;
-	
-	
-	public function __construct(Money|int|float|null $value)
-	{
-		if($value instanceof self)
-		{
-			$value = $value->getValue();
-		}
-		
-		$this->value = $value;
-	}
+    private int|float|null $value;
 
-	public function getValue() : int|float|null
-	{
-		return round($this->value, 2);
-	}
+
+    public function __construct(Money|int|float|null $value)
+    {
+        if($value instanceof self)
+        {
+            $value = $value->getValue();
+        }
+
+        $this->value = $value;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->getValue();
+    }
+
+    public function getValue(): int|float|null
+    {
+        return round($this->value, 2);
+    }
 
     /**
      * Приводит отрицательное число к 0, либо положительный результат
      */
-    public function getOnlyPositive() : int|float|null
+    public function getOnlyPositive(): int|float|null
     {
         return round(max(0, $this->value), 2);
     }
