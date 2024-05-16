@@ -23,6 +23,7 @@
 
 namespace BaksDev\Reference\Money\Twig;
 
+use BaksDev\Reference\Money\Type\Money;
 use NumberFormatter;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
@@ -47,12 +48,19 @@ final class MoneyExtension extends AbstractExtension
 	}
 	
 	
-	public function call(?float $money, ?string $from = 'RUR', string $to = null)
+	public function call(Money|float|null $money, ?string $from = 'RUR', string $to = null)
 	{
 		
 		if(empty($money)) { return null; }
-		
-		$money = ($money * 1 / 100);
+
+        if($money instanceof Money)
+        {
+            $money = ($money->getValue() * 1);
+        }
+        else
+        {
+            $money = ($money * 1 / 100);
+        }
 		
 		if(empty($money)) {  return null; }
 		
