@@ -34,8 +34,18 @@ final class Money
     private int|float|null $value;
 
 
-    public function __construct(Money|int|float|null $value)
+    public function __construct(Money|int|float|string|null $value)
     {
+        if(is_string($value) || is_int($value))
+        {
+            if(is_string($value))
+            {
+                $value = str_replace(',', '.', $value);
+            }
+
+            $value = (float) $value;
+        }
+
         if($value instanceof self)
         {
             $value = $value->getValue();
@@ -53,6 +63,7 @@ final class Money
     {
         return round($this->value, 2);
     }
+
 
     /**
      * Приводит отрицательное число к 0, либо положительный результат
