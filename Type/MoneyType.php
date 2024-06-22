@@ -28,28 +28,26 @@ use Doctrine\DBAL\Types\Type;
 
 final class MoneyType extends Type
 {
-	
-	public function convertToDatabaseValue($value, AbstractPlatform $platform): mixed
-	{
-		return $value instanceof Money ? $value->getValue() * 100 : $value * 100;
-	}
-	
-	
-	public function convertToPHPValue($value, AbstractPlatform $platform): ?Money
-	{
-		return !empty($value) ? new Money($value / 100) : null; //new Money(0);
-	}
-	
-	
-	public function getName(): string
-	{
-		return Money::TYPE;
-	}
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): mixed
+    {
+        return $value instanceof Money ? $value->getValue() * 100 : $value * 100;
+    }
 
-	public function requiresSQLCommentHint(AbstractPlatform $platform) : bool
-	{
-		return true;
-	}
+    public function convertToPHPValue($value, AbstractPlatform $platform): ?Money
+    {
+        return !empty($value) ? new Money($value / 100) : null; //new Money(0);
+    }
+
+
+    public function getName(): string
+    {
+        return Money::TYPE;
+    }
+
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
+    {
+        return true;
+    }
 
     public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
