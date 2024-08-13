@@ -34,7 +34,10 @@ final class Money
     private int|float|null $value;
 
 
-    public function __construct(Money|int|float|string|null $value)
+    /**
+     * $division = true - если число целое не разделено предварительно на 100 и не имеет плавающую точку - применяем деление
+     */
+    public function __construct(Money|int|float|string|null $value, bool $division = false)
     {
         if(is_string($value) || is_int($value))
         {
@@ -44,6 +47,11 @@ final class Money
             }
 
             $value = (float) $value;
+        }
+
+        if($division === true)
+        {
+            $value /= 100;
         }
 
         if($value instanceof self)
@@ -59,9 +67,19 @@ final class Money
         return (string) $this->getValue();
     }
 
-    public function getValue(): int|float|null
+    /**
+     * $multiply = true - применить умножение на 100 для перевода копеек в целое число
+     */
+    public function getValue($multiply = false): int|float|null
     {
-        return round($this->value, 2);
+        $value = round($this->value, 2);
+
+        if($multiply === true)
+        {
+            $value *= 100;
+        }
+
+        return $value;
     }
 
 

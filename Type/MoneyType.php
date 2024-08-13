@@ -30,12 +30,12 @@ final class MoneyType extends Type
 {
     public function convertToDatabaseValue($value, AbstractPlatform $platform): mixed
     {
-        return $value instanceof Money ? $value->getValue() * 100 : $value * 100;
+        return (new Money($value))->getValue(true);
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform): ?Money
     {
-        return !empty($value) ? new Money($value / 100) : null; //new Money(0);
+        return !empty($value) ? new Money($value, true) : null; //new Money(0);
     }
 
 

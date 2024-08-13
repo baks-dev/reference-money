@@ -42,37 +42,61 @@ class MoneyTest extends KernelTestCase
         /** @see MoneyDTO */
         $MoneyInt = new Money(1);
         self::assertEquals(1.0, $MoneyInt->getValue());
+        self::assertEquals(100, $MoneyInt->getValue(true));
 
         // Округление до двух знаков
 
         $MoneyFloat = new Money(123.124);
         self::assertEquals(123.12, $MoneyFloat->getValue());
+        self::assertEquals(12312, $MoneyFloat->getValue(true));
 
         $MoneyFloat = new Money(123.125);
         self::assertEquals(123.13, $MoneyFloat->getValue());
+        self::assertEquals(12313, $MoneyFloat->getValue(true));
 
 
         // Преобразуем строки
 
         $MoneyStringReplace = new Money('123,125');
         self::assertEquals(123.13, $MoneyStringReplace->getValue());
+        self::assertEquals(12313, $MoneyStringReplace->getValue(true));
 
         $MoneyString = new Money('123.125');
         self::assertEquals(123.13, $MoneyString->getValue());
+        self::assertEquals(12313, $MoneyString->getValue(true));
 
 
         $MoneySelf = new Money($MoneyString);
         self::assertEquals(123.13, $MoneySelf->getValue());
+        self::assertEquals(12313, $MoneySelf->getValue(true));
 
 
         // Математические действия
 
         $MoneySelf = $MoneySelf->add($MoneyString);
         self::assertEquals(246.26, $MoneySelf->getValue());
+        self::assertEquals(24626, $MoneySelf->getValue(true));
 
 
         $MoneySelf = $MoneySelf->sub($MoneyString);
         self::assertEquals(123.13, $MoneySelf->getValue());
+        self::assertEquals(12313, $MoneySelf->getValue(true));
+
+
+        /** DIVISION */
+
+        $MoneyStringReplace = new Money('123121', true);
+        self::assertEquals(1231.21, $MoneyStringReplace->getValue());
+        self::assertEquals(123121, $MoneyStringReplace->getValue(true));
+
+        $MoneyString = new Money('123122', true);
+        self::assertEquals(1231.22, $MoneyString->getValue());
+        self::assertEquals(123122, $MoneyString->getValue(true));
+
+        $MoneyFloat = new Money(123123, true);
+        self::assertEquals(1231.23, $MoneyFloat->getValue());
+        self::assertEquals(123123, $MoneyFloat->getValue(true));
+
 
     }
 
