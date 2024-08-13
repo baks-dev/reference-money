@@ -29,7 +29,7 @@ final class Money
 {
     public const TYPE = 'money_type';
 
-    public const TEST = 1.25;
+    public const TEST = 100.25;
 
     private int|float|null $value;
 
@@ -49,14 +49,14 @@ final class Money
             $value = (float) $value;
         }
 
-        if($division === true)
-        {
-            $value /= 100;
-        }
-
         if($value instanceof self)
         {
             $value = $value->getValue();
+        }
+
+        if($division === true)
+        {
+            $value /= 100;
         }
 
         $this->value = $value;
