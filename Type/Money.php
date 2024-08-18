@@ -37,8 +37,10 @@ final class Money
     /**
      * $division = true - если число целое не разделено предварительно на 100 и не имеет плавающую точку - применяем деление
      */
-    public function __construct(Money|int|float|string|null $value, bool $division = false)
-    {
+    public function __construct(
+        Money|int|float|string|null $value,
+        bool $division = false // true - если нужно разделить на 100
+    ) {
         if(is_string($value) || is_int($value))
         {
             if(is_string($value))
