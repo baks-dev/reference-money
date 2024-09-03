@@ -74,6 +74,11 @@ final class Money
      */
     public function getValue($multiply = false): int|float|null
     {
+        if(is_null($this->value))
+        {
+            return 0;
+        }
+
         $value = round($this->value, 2);
 
         if($multiply === true)
@@ -137,7 +142,7 @@ final class Money
         return $this;
     }
 
-    public function equals(mixed $money)
+    public function equals(mixed $money): bool
     {
         $money = new self($money);
         return $this->getValue() === $money->getValue();
