@@ -98,6 +98,26 @@ final class Money
         return round(max(0, $this->value), 2);
     }
 
+    /**
+     * Приводит отрицательное число к 0, округляет до целого числа (без копеек)
+     * если precision = 10 - округлить до десяток (1231.0 -> 1230)
+     * если precision = 100 - округлить до соток (1231.0 -> 1200)
+     * если precision = 1000 - округлить до тысяч (1231.0 -> 1000)
+     */
+    public function getRoundValue($precision = null): int
+    {
+        $round = match ($precision)
+        {
+            10 => -1,
+            100 => -2,
+            1000 => -3,
+            default => 0,
+        };
+
+        return (int) round(max(0, $this->value), $round);
+    }
+
+
     public function add(self $money): self
     {
         if($money->getValue() < 0)
