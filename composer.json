@@ -29,7 +29,6 @@
       "BaksDev\\Reference\\Money\\": ""
     }
   },
-
   "config": {
     "sort-packages": true,
     "allow-plugins": {
