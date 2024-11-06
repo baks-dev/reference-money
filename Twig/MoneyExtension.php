@@ -71,8 +71,10 @@ final class MoneyExtension extends AbstractExtension
             return null;
         }
 
-        //		if(empty($to)) {
-        //            $to = $from; }
+        if(empty($to))
+        {
+            $to = $from;
+        }
 
         if($from !== $to)
         {
