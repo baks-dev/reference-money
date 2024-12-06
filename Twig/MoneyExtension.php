@@ -49,7 +49,7 @@ final class MoneyExtension extends AbstractExtension
     }
 
 
-    public function call(Money|float|null $money, ?string $from = 'RUR', ?string $to = null)
+    public function call(Money|float|null $money, string|false|null $from = 'RUR', ?string $to = null)
     {
 
         if(empty($money))
@@ -83,6 +83,11 @@ final class MoneyExtension extends AbstractExtension
 
         $fmt = new NumberFormatter($this->translator->getLocale(), NumberFormatter::CURRENCY);
         $fmt->setAttribute(NumberFormatter::FRACTION_DIGITS, 2);
+
+        if(false === $from)
+        {
+            $fmt->setPattern("#,##0.00\u{A0}");
+        }
 
         return str_replace([',00', '.00'], '', $fmt->formatCurrency($money, $to ?: 'RUR'));
     }
