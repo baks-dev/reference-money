@@ -27,9 +27,9 @@ use InvalidArgumentException;
 
 final class Money
 {
-    public const TYPE = 'money_type';
+    public const string TYPE = 'money_type';
 
-    public const TEST = 100.25;
+    public const float TEST = 100.25;
 
     private int|float|null $value;
 
