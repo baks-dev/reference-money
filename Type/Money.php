@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -132,22 +132,107 @@ final class Money
             throw new InvalidArgumentException('Для суммы значение должно быть строго положительным');
         }
 
-        $current = $this->getValue() * 100;
-        $add = $money->getValue() * 100;
+        $current = $this->getValue(true);
+        $add = $money->getValue(true);
         $this->value = ($current + $add) / 100;
 
         return $this;
     }
 
-
-    public function percent(int $percent): self
+    /**
+     * Метод суммирует при положительном $money и разность при отрицательном
+     */
+    public function mathematical(self $money): self
     {
-        if($percent < 0 || $percent > 100)
+        $current = $this->getValue(true);
+
+        $value = $money->getValue(true);
+
+        if($value === 0)
+        {
+            return $this;
+        }
+
+        if($value > 0)
+        {
+            $this->value = ($current + $value) / 100;
+            return $this;
+        }
+
+        if($value < 0)
+        {
+            $value = abs($value);
+            $this->value = ($current - $value) / 100;
+            return $this;
+        }
+
+        return $this;
+    }
+
+
+    public function applyString(int|float|string $number): self
+    {
+        $isPercent = false;
+
+        /** Если в строке есть знак процента - применяется процент */
+
+        if(str_contains($number, '%'))
+        {
+            $number = (float) filter_var($number, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+            $isPercent = true;
+        }
+
+        return $isPercent ? $this->applyPercent($number) : $this->applyNumeric($number);
+
+    }
+
+
+    /**
+     * Метод применяет процент к сумме
+     */
+    public function applyPercent(int|float $percent): self
+    {
+        if($percent < -100 || $percent > 100)
         {
             throw new InvalidArgumentException('Для расчета процента значение должно быть от 0 до 100');
         }
 
-        $current = $this->getValue() * 100;
+        $current = $this->getValue(true);
+
+        $discount = ($current / 100 * $percent);
+
+        $this->value = ($current + $discount) / 100;
+
+        return $this;
+    }
+
+
+    /**
+     * Метод применяет число к сумме
+     */
+    public function applyNumeric(int|float $number): self
+    {
+        $current = $this->getValue(true);
+
+        $discount = $number * 100;
+
+        $this->value = ($current + $discount) / 100;
+
+        return $this;
+    }
+
+
+    /**
+     * Метод возвращает процент от суммы (всегда положительный)
+     */
+    public function percent(int $percent): self
+    {
+        if($percent < 100 || $percent > 100)
+        {
+            throw new InvalidArgumentException('Для расчета процента значение должно быть от 0 до 100');
+        }
+
+        $current = $this->getValue(true);
 
         $discount = ($current / 100 * $percent) / 100;
 
@@ -162,8 +247,8 @@ final class Money
             throw new InvalidArgumentException('Для разности значение должно быть строго положительным');
         }
 
-        $current = $this->getValue() * 100;
-        $sub = $money->getValue() * 100;
+        $current = $this->getValue(true);
+        $sub = $money->getValue(true);
         $this->value = ($current - $sub) / 100;
 
         return $this;
@@ -172,7 +257,7 @@ final class Money
     public function equals(mixed $money): bool
     {
         $money = new self($money);
-        return $this->getValue() === $money->getValue();
+        return $this->getValue(true) === $money->getValue(true);
     }
 
 
