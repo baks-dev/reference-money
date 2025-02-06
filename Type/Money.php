@@ -139,6 +139,24 @@ final class Money
         return $this;
     }
 
+
+    public function sub(self $money): self
+    {
+        if($money->getValue() < 0)
+        {
+            throw new InvalidArgumentException('Для разности значение должно быть строго положительным');
+        }
+
+        $current = $this->getValue(true);
+        $sub = $money->getValue(true);
+
+        $this->value = ($current - $sub) / 100;
+
+        return $this;
+    }
+
+
+
     /**
      * Метод суммирует при положительном $money и разность при отрицательном
      */
@@ -170,6 +188,15 @@ final class Money
     }
 
 
+    /**
+     * Метод парсит строку и добавляет к цене
+     *
+     * Положительное либо отрицательное число в рублях, либо с процентом, пример:
+     * 100.1
+     * -100.1
+     * 10.1%
+     * -10.1%
+     */
     public function applyString(int|float|string $number): self
     {
         $isPercent = false;
@@ -240,19 +267,7 @@ final class Money
     }
 
 
-    public function sub(self $money): self
-    {
-        if($money->getValue() < 0)
-        {
-            throw new InvalidArgumentException('Для разности значение должно быть строго положительным');
-        }
 
-        $current = $this->getValue(true);
-        $sub = $money->getValue(true);
-        $this->value = ($current - $sub) / 100;
-
-        return $this;
-    }
 
     public function equals(mixed $money): bool
     {
