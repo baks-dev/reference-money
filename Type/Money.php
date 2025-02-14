@@ -254,7 +254,7 @@ final class Money
      */
     public function percent(int $percent): self
     {
-        if($percent < 100 || $percent > 100)
+        if($percent < -100 || $percent > 100)
         {
             throw new InvalidArgumentException('Для расчета процента значение должно быть от 0 до 100');
         }
