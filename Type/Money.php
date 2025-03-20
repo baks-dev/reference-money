@@ -73,7 +73,7 @@ final class Money
     /**
      * $multiply = true - применить умножение на 100 для перевода копеек в целое число
      */
-    public function getValue($multiply = false): int|float|null
+    public function getValue($multiply = false): int|float
     {
         if(is_null($this->value))
         {
