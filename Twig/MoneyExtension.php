@@ -23,6 +23,7 @@
 
 namespace BaksDev\Reference\Money\Twig;
 
+use BaksDev\Reference\Currency\Type\Currency;
 use BaksDev\Reference\Money\Type\Money;
 use NumberFormatter;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -31,9 +32,7 @@ use Twig\TwigFunction;
 
 final class MoneyExtension extends AbstractExtension
 {
-
     public function __construct(private readonly TranslatorInterface $translator) {}
-
 
     public function getFunctions(): array
     {
@@ -42,9 +41,11 @@ final class MoneyExtension extends AbstractExtension
         ];
     }
 
-
-    public function call(Money|float|null $money, string|false|null $from = 'RUR', ?string $to = null)
+    public function call(Money|int|float|null $money, Currency|string|false|null $from = null): ?string
     {
+        /**
+         * Money
+         */
 
         if(empty($money))
         {
@@ -53,26 +54,24 @@ final class MoneyExtension extends AbstractExtension
 
         if($money instanceof Money)
         {
-            $money = ($money->getValue() * 1);
+            $money = $money->getValue();
         }
         else
         {
             $money = ($money * 1 / 100);
         }
 
-        if(empty($money))
-        {
-            return null;
-        }
+        /**
+         * Currency
+         */
 
-        if(empty($to))
-        {
-            $to = $from;
-        }
+        $system = new Currency()->getCurrencyValueUpper();
 
-        if($from !== $to)
+        $from = new Currency($from)->getCurrencyValueUpper();
+
+        if($system !== $from)
         {
-            /** TODO:Конвертируем валюту */
+            /** TODO: Конвертируем валюту */
         }
 
         $fmt = new NumberFormatter($this->translator->getLocale(), NumberFormatter::CURRENCY);
@@ -83,7 +82,7 @@ final class MoneyExtension extends AbstractExtension
             $fmt->setPattern("#,##0.00\u{A0}");
         }
 
-        return str_replace([',00', '.00'], '', $fmt->formatCurrency($money, $to ?: 'RUR'));
+        return str_replace([',00', '.00'], '', $fmt->formatCurrency($money, $from ?: 'RUR'));
     }
 
 }

@@ -39,6 +39,10 @@ class MoneyTest extends KernelTestCase
 {
     public function testUseCase(): void
     {
+
+        $MoneyNull = new Money(null);
+        self::assertEquals(0, $MoneyNull->getValue());
+
         /** @see MoneyDTO */
         $MoneyInt = new Money(1);
         self::assertEquals(1.0, $MoneyInt->getValue());
