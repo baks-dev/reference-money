@@ -197,8 +197,13 @@ final class Money
      * 10.1%
      * -10.1%
      */
-    public function applyString(int|float|string $number): self
+    public function applyString(int|float|string|null|false $number): self
     {
+        if(empty($number))
+        {
+            return $this;
+        }
+
         $isPercent = false;
 
         /** Если в строке есть знак процента - применяется процент */

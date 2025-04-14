@@ -164,7 +164,17 @@ class MoneyTest extends KernelTestCase
         $MoneyFloat->applyString(-20.1);
         self::assertEquals(979.9, $MoneyFloat->getValue());
 
+        $MoneyFloat = new Money(1000);
+        $MoneyFloat->applyString(null);
+        self::assertEquals(1000, $MoneyFloat->getValue());
 
+        $MoneyFloat = new Money(1000);
+        $MoneyFloat->applyString(false);
+        self::assertEquals(1000, $MoneyFloat->getValue());
+
+        $MoneyFloat = new Money(1000);
+        $MoneyFloat->applyString('');
+        self::assertEquals(1000, $MoneyFloat->getValue());
 
     }
 
