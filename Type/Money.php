@@ -75,7 +75,7 @@ final class Money
      */
     public function getValue($multiply = false): int|float
     {
-        if(is_null($this->value))
+        if(empty($this->value))
         {
             return 0;
         }

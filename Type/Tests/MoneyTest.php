@@ -41,7 +41,23 @@ class MoneyTest extends KernelTestCase
     {
 
         $MoneyNull = new Money(null);
-        self::assertEquals(0, $MoneyNull->getValue());
+        self::assertSame($MoneyNull->getValue(), 0);
+
+        $MoneyNull = new Money(0);
+        self::assertSame($MoneyNull->getValue(), 0);
+
+        $MoneyNull = new Money(0.0);
+        self::assertSame($MoneyNull->getValue(), 0);
+
+        $MoneyNull = new Money('0.0');
+        self::assertSame($MoneyNull->getValue(), 0);
+
+        $MoneyNull = new Money('0');
+        self::assertSame($MoneyNull->getValue(), 0);
+
+        $MoneyNull = new Money('');
+        self::assertSame($MoneyNull->getValue(), 0);
+
 
         /** @see MoneyDTO */
         $MoneyInt = new Money(1);
