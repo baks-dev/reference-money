@@ -197,7 +197,7 @@ final class Money
      * 10.1%
      * -10.1%
      */
-    public function applyString(int|float|string|null|false $number): self
+    public function applyString(int|float|string|null|false $number, bool $round = true): self
     {
         if(empty($number))
         {
@@ -214,7 +214,7 @@ final class Money
             $isPercent = true;
         }
 
-        return $isPercent ? $this->applyPercent($number) : $this->applyNumeric($number);
+        return $isPercent ? $this->applyPercent($number, $round) : $this->applyNumeric($number);
 
     }
 
@@ -222,7 +222,7 @@ final class Money
     /**
      * Метод применяет процент к сумме
      */
-    public function applyPercent(int|float $percent): self
+    public function applyPercent(int|float $percent, bool $round = true): self
     {
         if($percent < -100 || $percent > 100)
         {
@@ -232,6 +232,13 @@ final class Money
         $current = $this->getValue(true);
 
         $discount = ($current / 100 * $percent);
+
+        if(true === $round)
+        {
+            $discount /= 100;
+            $discount = round($discount, 0);
+            $discount *= 100;
+        }
 
         $this->value = ($current + $discount) / 100;
 
