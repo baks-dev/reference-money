@@ -134,7 +134,7 @@ final class Money
 
         $current = $this->getValue(true);
         $add = $money->getValue(true);
-        $this->value = ($current + $add) / 100;
+        $this->value = ($current + $add) * 0.01;
 
         return $this;
     }
@@ -150,11 +150,10 @@ final class Money
         $current = $this->getValue(true);
         $sub = $money->getValue(true);
 
-        $this->value = ($current - $sub) / 100;
+        $this->value = ($current - $sub) * 0.01;
 
         return $this;
     }
-
 
 
     /**
@@ -166,21 +165,21 @@ final class Money
 
         $value = $money->getValue(true);
 
-        if($value === 0)
+        if(empty($value))
         {
             return $this;
         }
 
         if($value > 0)
         {
-            $this->value = ($current + $value) / 100;
+            $this->value = ($current + $value) * 0.01;
             return $this;
         }
 
         if($value < 0)
         {
             $value = abs($value);
-            $this->value = ($current - $value) / 100;
+            $this->value = ($current - $value) * 0.01;
             return $this;
         }
 
@@ -229,18 +228,23 @@ final class Money
             throw new InvalidArgumentException('Для расчета процента значение должно быть от 0 до 100');
         }
 
+        // Получаем сумму * 100
         $current = $this->getValue(true);
 
-        $discount = ($current / 100 * $percent);
+        // Определяем результат процента от суммы
+        $discount = ($current * 0.01 * $percent);
 
+        // При необходимости до целых чисел
         if(true === $round)
         {
-            $discount /= 100;
+            $discount *= 0.01; //
             $discount = round($discount, 0);
             $discount *= 100;
+
         }
 
-        $this->value = ($current + $discount) / 100;
+        // Т.к. сумма и процент без копеек - приводим результат к копейкам
+        $this->value = ($current + $discount) * 0.01;
 
         return $this;
     }
@@ -255,7 +259,7 @@ final class Money
 
         $discount = $number * 100;
 
-        $this->value = ($current + $discount) / 100;
+        $this->value = ($current + $discount) * 0.01;
 
         return $this;
     }
@@ -273,12 +277,10 @@ final class Money
 
         $current = $this->getValue(true);
 
-        $discount = ($current / 100 * $percent) / 100;
+        $discount = ($current * 0.01 * $percent) * 0.01;
 
         return new self($discount);
     }
-
-
 
 
     public function equals(mixed $money): bool

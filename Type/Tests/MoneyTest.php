@@ -127,28 +127,58 @@ class MoneyTest extends KernelTestCase
 
 
         $MoneyFloat = new Money(100);
-        $MoneyFloat->applyPercent(10);
+        $MoneyFloat->applyPercent(10, false); // false - без округления
         self::assertEquals(110, $MoneyFloat->getRoundValue(10));
 
         $MoneyFloat = new Money(100);
-        $MoneyFloat->applyPercent(10.1);
+        $MoneyFloat->applyPercent(10);
+        self::assertEquals(110, $MoneyFloat->getRoundValue(10));
+
+
+        $MoneyFloat = new Money(100);
+        $MoneyFloat->applyPercent(10.1, false); // false - без округления
         self::assertEquals(110.1, $MoneyFloat->getValue());
 
+        $MoneyFloat = new Money(100);
+        $MoneyFloat->applyPercent(10.1, true); // true - округляем
+        self::assertEquals(110.0, $MoneyFloat->getValue());
+
+
         $MoneyFloat = new Money(1000);
-        $MoneyFloat->applyPercent(10.1);
+        $MoneyFloat->applyPercent(10.1, false); // false - без округления
+        self::assertEquals(1101, $MoneyFloat->getValue());
+
+        $MoneyFloat = new Money(1000);
+        $MoneyFloat->applyPercent(10.1); // true - округляем
         self::assertEquals(1101, $MoneyFloat->getValue());
 
 
         $MoneyFloat = new Money(100);
-        $MoneyFloat->applyPercent(-10);
+        $MoneyFloat->applyPercent(-10, false); // false - без округления
         self::assertEquals(90, $MoneyFloat->getRoundValue(10));
 
         $MoneyFloat = new Money(100);
-        $MoneyFloat->applyPercent(-10.1);
+        $MoneyFloat->applyPercent(-10); // true - округляем
+        self::assertEquals(90, $MoneyFloat->getRoundValue(10));
+
+
+        $MoneyFloat = new Money(100);
+        $MoneyFloat->applyPercent(-10.1, false); // false - без округления
         self::assertEquals(89.9, $MoneyFloat->getValue());
 
+        $MoneyFloat = new Money(100);
+        $MoneyFloat->applyPercent(-10.1); // true - округляем
+        self::assertEquals(90.0, $MoneyFloat->getValue());
+
+
+
+
         $MoneyFloat = new Money(1000);
-        $MoneyFloat->applyPercent(-10.1);
+        $MoneyFloat->applyPercent(-10.11, false); // false - без округления
+        self::assertEquals(898.9, $MoneyFloat->getValue());
+
+        $MoneyFloat = new Money(1000);
+        $MoneyFloat->applyPercent(-10.11); // true - округляем
         self::assertEquals(899, $MoneyFloat->getValue());
 
 
@@ -157,28 +187,64 @@ class MoneyTest extends KernelTestCase
         self::assertEquals(989.9, $MoneyFloat->getValue());
 
         $MoneyFloat = new Money(1000);
+        $MoneyFloat->applyNumeric(-10.11);
+        self::assertEquals(989.89, $MoneyFloat->getValue());
+
+
+        // При передаче чисел - не округляем!
+
+        $MoneyFloat = new Money(1000);
         $MoneyFloat->applyNumeric(10.1);
         self::assertEquals(1010.1, $MoneyFloat->getValue());
 
+        $MoneyFloat = new Money(1000);
+        $MoneyFloat->applyNumeric(10.11);
+        self::assertEquals(1010.11, $MoneyFloat->getValue());
+
+
+
+
 
         $MoneyFloat = new Money(100);
-        $MoneyFloat->applyString('10.1%');
-        self::assertEquals(110.1, $MoneyFloat->getValue());
+        $MoneyFloat->applyString('10.11%', false); // false - без округления
+        self::assertEquals(110.11, $MoneyFloat->getValue());
+
+        $MoneyFloat = new Money(100);
+        $MoneyFloat->applyString('10.11%', true); // округляем
+        self::assertEquals(110, $MoneyFloat->getValue());
 
 
         $MoneyFloat = new Money(100);
-        $MoneyFloat->applyString('-10.1%');
-        self::assertEquals(89.9, $MoneyFloat->getValue());
+        $MoneyFloat->applyString('-10.11%', false); // false - без округления
+        self::assertEquals(89.89, $MoneyFloat->getValue());
+
+
+        $MoneyFloat = new Money(100);
+        $MoneyFloat->applyString('-10.11%', true); // округляем
+        self::assertEquals(90, $MoneyFloat->getValue());
+
+
+        /** @note При передаче чисел - результат не округляется! */
+
+        $MoneyFloat = new Money(1000);
+        $MoneyFloat->applyString(20.11, false); // false - без округления
+        self::assertEquals(1020.11, $MoneyFloat->getValue());
+
+        $MoneyFloat = new Money(1000);
+        $MoneyFloat->applyString(20.11); // округляем
+        self::assertEquals(1020.11, $MoneyFloat->getValue());
 
 
         $MoneyFloat = new Money(1000);
-        $MoneyFloat->applyString(20.1);
-        self::assertEquals(1020.1, $MoneyFloat->getValue());
-
+        $MoneyFloat->applyString(-20.1, false);
+        self::assertEquals(979.9, $MoneyFloat->getValue());
 
         $MoneyFloat = new Money(1000);
         $MoneyFloat->applyString(-20.1);
         self::assertEquals(979.9, $MoneyFloat->getValue());
+
+
+        /** empty значения не применяют скидку */
 
         $MoneyFloat = new Money(1000);
         $MoneyFloat->applyString(null);
@@ -192,6 +258,46 @@ class MoneyTest extends KernelTestCase
         $MoneyFloat->applyString('');
         self::assertEquals(1000, $MoneyFloat->getValue());
 
+        $MoneyFloat = new Money(1000);
+        $MoneyFloat->applyString('0');
+        self::assertEquals(1000, $MoneyFloat->getValue());
+
+
+        $MoneyFloat = new Money(1000);
+        $MoneyFloat->applyString(0);
+        self::assertEquals(1000, $MoneyFloat->getValue());
+
+
+        /** Performance */
+
+        //        // Пример использования
+        //        $executionTime = $this->benchmark(function() {
+        //            for ($i = 0; $i < 1000000; $i++) {
+        //                $MoneyFloat = new Money(1000);
+        //                $MoneyFloat->applyString('10.11%');
+        //                $result = $MoneyFloat->getValue();
+        //            }
+        //        });
+        //
+        //        echo "Время выполнения: " . $executionTime . " секунд.";
+
+
+    }
+
+
+    function benchmark(callable $function)
+    {
+        // Запоминаем время начала выполнения
+        $startTime = microtime(true);
+
+        // Вызываем переданную функцию
+        $function();
+
+        // Запоминаем время окончания выполнения
+        $endTime = microtime(true);
+
+        // Вычисляем разницу во времени
+        return $endTime - $startTime;
     }
 
 }
