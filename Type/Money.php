@@ -57,9 +57,10 @@ final class Money
             $value = $value->getValue();
         }
 
-        if($division === true)
+        /** Если стоимость больше 0 и division === true - приводим к копейкам умножая на 0.01 (деление на 100) */
+        if(false === empty($value) && $division === true)
         {
-            $value /= 100;
+            $value *= 0.01;
         }
 
         $this->value = $value;
