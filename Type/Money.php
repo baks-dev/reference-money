@@ -269,7 +269,7 @@ final class Money
     /**
      * Метод возвращает процент от суммы (всегда положительный)
      */
-    public function percent(int $percent): self
+    public function percent(int|float $percent): self
     {
         if($percent < -100 || $percent > 100)
         {
