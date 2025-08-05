@@ -91,6 +91,12 @@ final class Money
         return $value;
     }
 
+    /** Умножаем сумму на количество */
+    public function multiplication(int $count): self
+    {
+        $this->value *= $count;
+        return $this;
+    }
 
     /**
      * Приводит отрицательное число к 0, либо положительный результат
