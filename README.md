@@ -1,6 +1,6 @@
 # BaksDev Reference Money
 
-[![Version](https://img.shields.io/badge/version-7.2.13-blue)](https://github.com/baks-dev/reference-money/releases)
+[![Version](https://img.shields.io/badge/version-7.3.0-blue)](https://github.com/baks-dev/reference-money/releases)
 ![php 8.4+](https://img.shields.io/badge/php-min%208.4-red.svg)
 [![packagist](https://img.shields.io/badge/packagist-green)](https://packagist.org/packages/baks-dev/reference-money)
 

@@ -28,13 +28,12 @@ namespace BaksDev\Reference\Money\Type\Tests;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Reference\Money\Type\Money;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group reference-money
- */
 #[When(env: 'test')]
+#[Group('reference-money')]
 class MoneyTest extends KernelTestCase
 {
     public function testUseCase(): void
