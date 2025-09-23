@@ -35,7 +35,8 @@ final class Money
 
 
     /**
-     * $division = true - если число целое не разделено предварительно на 100 и не имеет плавающую точку - применяем деление
+     * $division = true - если число целое не разделено предварительно на 100 и не имеет плавающую точку - применяем
+     * деление
      */
     public function __construct(
         Money|int|float|string|null $value,
@@ -260,8 +261,14 @@ final class Money
     /**
      * Метод применяет число к сумме
      */
-    public function applyNumeric(int|float $number): self
+    public function applyNumeric(int|float|string $number): self
     {
+        if(is_string($number))
+        {
+            $number = (float) filter_var($number, FILTER_SANITIZE_NUMBER_FLOAT,
+                FILTER_FLAG_ALLOW_FRACTION | FILTER_FLAG_ALLOW_THOUSAND);
+        }
+
         $current = $this->getValue(true);
 
         $discount = $number * 100;
