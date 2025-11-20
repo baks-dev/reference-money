@@ -229,8 +229,13 @@ final class Money
     /**
      * Метод применяет процент к сумме
      */
-    public function applyPercent(int|float $percent, bool $round = true): self
+    public function applyPercent(int|float|null $percent, bool $round = true): self
     {
+        if(empty($percent))
+        {
+            return $this;
+        }
+
         if($percent < -100 || $percent > 100)
         {
             throw new InvalidArgumentException('Для расчета процента значение должно быть от 0 до 100');
