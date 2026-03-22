@@ -67,11 +67,6 @@ final class Money
         $this->value = $value;
     }
 
-    public function __toString(): string
-    {
-        return (string) $this->getValue();
-    }
-
     /**
      * $multiply = true - применить умножение на 100 для перевода копеек в целое число
      */
@@ -90,6 +85,11 @@ final class Money
         }
 
         return $value;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->getValue();
     }
 
     /** Умножаем сумму на количество */

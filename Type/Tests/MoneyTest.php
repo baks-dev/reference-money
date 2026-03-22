@@ -170,8 +170,6 @@ class MoneyTest extends KernelTestCase
         self::assertEquals(90.0, $MoneyFloat->getValue());
 
 
-
-
         $MoneyFloat = new Money(1000);
         $MoneyFloat->applyPercent(-10.11, false); // false - без округления
         self::assertEquals(898.9, $MoneyFloat->getValue());
@@ -199,9 +197,6 @@ class MoneyTest extends KernelTestCase
         $MoneyFloat = new Money(1000);
         $MoneyFloat->applyNumeric(10.11);
         self::assertEquals(1010.11, $MoneyFloat->getValue());
-
-
-
 
 
         $MoneyFloat = new Money(100);
